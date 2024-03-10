@@ -4,6 +4,7 @@ import {
   createTweetRepo,
   deleteTweetRepo,
   updateTweetRepo,
+  getAllTweetsRepo,
 } from "../repositories/tweet.repository";
 
 import { updateUserWithTweetIdRepo } from "../repositories/user.repository";
@@ -18,6 +19,20 @@ export const getTweetController = async (req: Request, res: Response) => {
       res.status(200).json({ data: tweet });
     } else {
       res.status(500).json({ error: "Tweet Not Found" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error });
+  }
+};
+
+export const getAllTweetsController = async (req: Request, res: Response) => {
+  try {
+    const tweets = await getAllTweetsRepo();
+    if (tweets) {
+      res.status(200).json({ data: tweets });
+    } else {
+      res.status(500).json({ error: "Tweets Not Found" });
     }
   } catch (error) {
     console.log(error);
@@ -51,7 +66,7 @@ export const createTweetController = async (req: Request, res: Response) => {
 
 export const updateTweetController = async (req: Request, res: Response) => {
   const updatedTweet: ITweetInterface = req.body;
-  console.log(updatedTweet)
+  console.log(updatedTweet);
 
   try {
     const success = await updateTweetRepo(updatedTweet.tweetId, updatedTweet);
